@@ -6,24 +6,226 @@
 			"include": "#keywords"
 		},
 		{
-			"include": "#strings"
+			"include": "#operators"
+		},
+		{
+			"include": "#numbers"
+		},
+		{
+			"include": "#entities"
+		},
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#variables"
+		},
+		{
+			"include": "#builtins"
 		}
 	],
 	"repository": {
 		"keywords": {
-			"patterns": [{
-				"name": "keyword.control.reverb",
-				"match": "\\b(if|while|for|return)\\b"
-			}]
-		},
-		"strings": {
-			"name": "string.quoted.double.reverb",
-			"begin": "\"",
-			"end": "\"",
 			"patterns": [
 				{
-					"name": "constant.character.escape.reverb",
-					"match": "\\\\."
+					"name": "keyword.control.reverb",
+					"match": "\\b(if|then|else|begin|end|return)\\b"
+				}
+			]
+		},
+		"operators": {
+			"patterns": [
+				{
+					"match": "!=|<=|>=|==|<|>",
+					"name": "keyword.operator.comparison.reverb"
+				},
+				{
+					"match": "&&|!|\\|\\|",
+					"name": "keyword.operator.logical.reverb"
+				},
+				{
+					"match": "%|\\*|/|-|\\+",
+					"name": "keyword.operator.reverb"
+				}
+			]
+		},
+		"numbers": {
+			"patterns": [
+				{
+					"match": "(?x)\n(?<!\\$)(?:\n  (?:\\b[0-9]+(\\.)[0-9]+[eE][+-]?[0-9]+\\b)| # 1.1E+3\n  (?:\\b[0-9]+(\\.)[eE][+-]?[0-9]+\\b)|       # 1.E+3\n  (?:\\B(\\.)[0-9]+[eE][+-]?[0-9]+\\b)|       # .1E+3\n  (?:\\b[0-9]+[eE][+-]?[0-9]+\\b)|            # 1E+3\n  (?:\\b[0-9]+(\\.)[0-9]+\\b)|                # 1.1\n  (?:\\b[0-9]+(\\.)\\B)|                      # 1.\n  (?:\\B(\\.)[0-9]+\\b)|                      # .1\n  (?:\\b[0-9]+\\b(?!\\.))                     # 1\n)(?!\\$)",
+					"captures": {
+						"0": {
+							"name": "constant.numeric.decimal.reverb"
+						},
+						"1": {
+							"name": "meta.delimiter.decimal.period.reverb"
+						},
+						"2": {
+							"name": "meta.delimiter.decimal.period.reverb"
+						},
+						"3": {
+							"name": "meta.delimiter.decimal.period.reverb"
+						},
+						"4": {
+							"name": "meta.delimiter.decimal.period.reverb"
+						},
+						"5": {
+							"name": "meta.delimiter.decimal.period.reverb"
+						},
+						"6": {
+							"name": "meta.delimiter.decimal.period.reverb"
+						}
+					}
+				}
+			]
+		},
+		"entities": {
+			"patterns": [{
+				"name": "entity.name.function.reverb",
+				"match": "(?<!\\.)\\b(fn)(?!\\s*:)\\b"
+			}]
+		},
+		"comments": {
+			"patterns": [
+				{
+					"begin": "#",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.reverb"
+						}
+					},
+					"end": "$",
+					"name": "comment.line.number-sign"
+				}
+			]
+		},
+		"variables": {
+			"patterns": [
+				{
+					"name": "storage.type.reverb",
+					"match": "(?<!\\.)\\b(var)(?!\\s*:)\\b"
+				},
+				{
+					"match": "(?<!\\.)\\b(fn)(?!\\s*:)\\b",
+					"name": "storage.type.reverb"
+				}
+			]
+		},
+		"function_params": {
+			"patterns": [
+				{
+					"begin": "\\(",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.parameters.begin.bracket.round.reverb"
+						}
+					},
+					"end": "\\)",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.parameters.end.bracket.round.reverb"
+						}
+					},
+					"name": "meta.parameters.reverb",
+					"patterns": [
+						{
+							"match": "(\\.\\.\\.)([a-zA-Z_$][\\w$]*)",
+							"captures": {
+								"1": {
+									"name": "keyword.operator.spread.reverb"
+								},
+								"2": {
+									"name": "variable.parameter.rest.function.reverb"
+								}
+							}
+						},
+						{
+							"include": "$self"
+						},
+						{
+							"match": "[a-zA-Z_$][\\w$]*",
+							"name": "variable.parameter.function.reverb"
+						}
+					]
+				}
+			]
+		},
+		"function_body": {
+			"patterns": [
+				{
+					"begin": "begin",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.function.body.begin.bracket.curly.reverb"
+						}
+					},
+					"end": "end",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.function.body.end.bracket.curly.reverb"
+						}
+					},
+					"patterns": [
+						{
+							"include": "$self"
+						}
+					]
+				}
+			]
+		},
+		"arguments": {
+			"patterns": [
+				{
+					"begin": "\\(",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.arguments.begin.bracket.round.reverb"
+						}
+					},
+					"end": "\\)",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.arguments.end.bracket.round.reverb"
+						}
+					},
+					"name": "meta.arguments.reverb",
+					"patterns": [
+						{
+							"include": "$self"
+						}
+					]
+				}
+			]
+		},
+		"function_calls": {
+			"patterns": [
+				{
+					"begin": "([\\w$]+)\\s*(?=\\()",
+					"beginCaptures": {
+						"1": {
+							"patterns": [
+								{
+									"match": "\\b(length|print|head|tail|push|pop|sine)\\b",
+									"name": "support.function.reverb"
+								},
+								{
+									"match": "[a-zA-Z_$][\\w$]*",
+									"name": "entity.name.function.reverb"
+								},
+								{
+									"match": "\\d[\\w$]*",
+									"name": "invalid.illegal.identifier.reverb"
+								}
+							]
+						}
+					},
+					"end": "(?<=\\))",
+					"name": "meta.function-call.reverb",
+					"patterns": [
+						{
+							"include": "#arguments"
+						}
+					]
 				}
 			]
 		}
