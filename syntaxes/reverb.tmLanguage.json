@@ -79,12 +79,6 @@
 				}
 			]
 		},
-		"entities": {
-			"patterns": [{
-				"name": "entity.name.function.reverb",
-				"match": "(?<!\\.)\\b(fn)(?!\\s*:)\\b"
-			}]
-		},
 		"comments": {
 			"patterns": [
 				{
@@ -106,8 +100,8 @@
 					"match": "(?<!\\.)\\b(var)(?!\\s*:)\\b"
 				},
 				{
-					"match": "(?<!\\.)\\b(fn)(?!\\s*:)\\b",
-					"name": "storage.type.reverb"
+					"name": "storage.type.reverb",
+					"match": "(?<!\\.)\\b(fn)(?!\\s*:)\\b"
 				}
 			]
 		},
